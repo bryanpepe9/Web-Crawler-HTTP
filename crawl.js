@@ -2,6 +2,29 @@ const { link } = require("fs");
 const { url } = require("inspector");
 const { JSDOM } = require("jsdom");
 
+async function crawlPage(urlString) {
+  console.log(`crawling ${urlString}`);
+  try {
+    const response = await fetch(urlString);
+    if (response.status > 399) {
+      console.log(
+        `error in fetch with status code ${response.status} on page ${urlString}`
+      );
+      return;
+    }
+    const contentType = response.headers.get("content-type");
+    if (!contentType.includes("text/html")) {
+      console.log(
+        `skipping non-html page ${urlString}, content type: ${contentType}`
+      );
+      return;
+    }
+    console.log(await response.text());
+  } catch (err) {
+    console.log(`error crawling ${urlString}: ${err.message}`);
+  }
+}
+
 function getURLsFromHTML(htmlBody, baseURL) {
   const urls = [];
   const dom = new JSDOM(htmlBody);
@@ -35,6 +58,7 @@ function normalizeURL(urlString) {
 }
 
 module.exports = {
-  normalizeURL,
+  crawlPage,
   getURLsFromHTML,
+  normalizeURL,
 };

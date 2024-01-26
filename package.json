@@ -4,7 +4,7 @@
   "description": "Website crawler that produces a report of the internal linkings of a website.",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node --no-warnings main.js",
     "test": "jest"
   },
   "author": "",
